@@ -31,7 +31,7 @@ namespace Verisoft.Core
         #region [ Members ]
 
         // Fields
-        private readonly ILogger<TestOrchastrator> m_logger;
+        //private readonly ILogger<TestOrchastrator> m_logger;
         public TestEvents testEvents;
         private List<ISubscriber> subscribers;
 
