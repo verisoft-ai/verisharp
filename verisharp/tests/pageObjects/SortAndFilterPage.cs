@@ -1,5 +1,5 @@
 //*****************************************************************************
-// DashboardPage.cs - Page Object for BS dashboard page
+// MainDataArea.cs - Representation of the main data area in the sytem
 //
 // VeriSoft Inc., 2022
 //
@@ -24,63 +24,38 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Verisoft.Pages
 {
-    public class DashboardPage : BasePage
+    public class SortAndFilterPage : BasePage
     {
-
         #region [ Members ]
+        private readonly ILocator m_apply;
         
-        // Fields
-        private readonly TopMenu m_topMenu;
-        private readonly LeftSideMenu m_leftSideMenu;
 
         #endregion
 
         #region [ Constructors ]
-
-        public DashboardPage(IPage page):base(page)
-        {
-            m_topMenu = new TopMenu(m_page);
-            m_leftSideMenu = new LeftSideMenu(m_page);
-        }
-
-        #endregion
-
-        #region [ Properties ]
-        public TopMenu TopMenu
-        {
-            get
-            {
-                return this.m_topMenu;
-            }
-        }
-
-        public LeftSideMenu LeftSideMenu
-        {
-            get
-            {
-                return this.m_leftSideMenu;
-
-            }
-        }
         
+        public SortAndFilterPage(IPage page):base(page)
+        {
+            m_apply = m_page.Locator("//*[@id='appView']//*[text()='Apply']");
+
+        }
         #endregion
 
         #region [ Methods ]
-        public override async Task<bool> IsOnPage()
+        public override Task<bool> IsOnPage()
         {
-            return await base.IsOnPage(m_page, "");
+            return base.IsOnPage(m_page, "//*[@id='appView']//*[text()='Apply']");
         }
         
+        public async Task Apply()
+        {
+            await m_apply.ClickAsync();
+        }
         #endregion
-
     }
 }
+

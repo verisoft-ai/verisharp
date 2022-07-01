@@ -1,5 +1,5 @@
 //*****************************************************************************
-// TopMenu.cs - Base for all page objects
+// TopMenu.cs - Representation of the top menu in the dashboard
 //
 // VeriSoft Inc., 2022
 //
@@ -44,9 +44,9 @@ namespace Verisoft.Pages
         public TopMenu(IPage page) : base(page)
         {
             //*[@data-testid='dropMenu'] 
-            m_companySelector = m_page.Locator("//*[@data-testid='dropMenu'] //*[text() ='Company:']/ancestor::div[@data-testid='dropMenu']//span[@class='MuiIconButton-label']/span");
-            m_brandSelector = m_page.Locator("//*[@data-testid='dropMenu'] //*[text() ='Brand:']/ancestor::div[@data-testid='dropMenu']//span[@class='MuiIconButton-label']/span");
-            m_btnUserDetails = m_page.Locator("[data-testid='menuListDropDownSelector']");
+            m_companySelector = m_page.Locator("//*[@data-testid='dropMenu'] //*[text() ='Company:']/ancestor::div[@data-testid='dropMenu']//span[@class='MuiIconButton-label']/span[1]");
+            m_brandSelector = m_page.Locator("//*[@data-testid='dropMenu'] //*[text() ='Brand:']/ancestor::div[@data-testid='dropMenu']//span[@class='MuiIconButton-label']/span[1]");
+            m_btnUserDetails = m_page.Locator("div[data-testid='menuListDropDownSelector']");
             m_btnHelp = m_page.Locator("#simpoPlusBtn");
 
         }

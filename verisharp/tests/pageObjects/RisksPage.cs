@@ -1,5 +1,5 @@
 //*****************************************************************************
-// DashboardPage.cs - Page Object for BS dashboard page
+// RisksPage.cs - Representation of the risks page, part of the websites page
 //
 // VeriSoft Inc., 2022
 //
@@ -24,63 +24,33 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-
 namespace Verisoft.Pages
 {
-    public class DashboardPage : BasePage
+    public class RisksPage : WebsitePage
     {
-
         #region [ Members ]
-        
-        // Fields
-        private readonly TopMenu m_topMenu;
-        private readonly LeftSideMenu m_leftSideMenu;
-
+        private readonly ILocator m_title;
+        private readonly ILocator m_sumOfAllRisks;
+        private readonly ILocator m_sumOfFlaggedRisks;
+        private readonly ILocator m_sumOfNewRisks;
         #endregion
 
         #region [ Constructors ]
-
-        public DashboardPage(IPage page):base(page)
+        public RisksPage(IPage page): base(page)
         {
-            m_topMenu = new TopMenu(m_page);
-            m_leftSideMenu = new LeftSideMenu(m_page);
+            m_title = m_page.Locator("//div[text()='Risks']");
+            m_sumOfAllRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[1]");
+            m_sumOfFlaggedRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[3]");
+            m_sumOfNewRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[2]");
         }
-
-        #endregion
-
-        #region [ Properties ]
-        public TopMenu TopMenu
-        {
-            get
-            {
-                return this.m_topMenu;
-            }
-        }
-
-        public LeftSideMenu LeftSideMenu
-        {
-            get
-            {
-                return this.m_leftSideMenu;
-
-            }
-        }
-        
         #endregion
 
         #region [ Methods ]
-        public override async Task<bool> IsOnPage()
+        public override Task<bool> IsOnPage()
         {
-            return await base.IsOnPage(m_page, "");
+            return base.IsOnPage(m_page, "//div[text()='Risks']");
         }
-        
         #endregion
-
     }
 }

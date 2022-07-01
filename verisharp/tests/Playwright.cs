@@ -34,6 +34,7 @@ namespace Verisoft
         }
 
 
+        [Test]
         public async Task LoginTest()
         {
             //playwright
@@ -46,6 +47,7 @@ namespace Verisoft
                     Headless = false
                 }
             );
+            
 
             // Page
             IPage page = await browser.NewPageAsync();
@@ -54,7 +56,21 @@ namespace Verisoft
             LoginPage loginPage = new LoginPage(page);
             var dashboardPage = loginPage.Login("Test.Auto", "Nglr!2022").Result;
             Thread.Sleep(5000);
-            dashboardPage.TopMenu.withCompany("TTI").Result.withBrand("Ryobi");
+            await dashboardPage.TopMenu.withCompany("TTI").Result.withBrand("Ryobi");
+            WebsitePage websitePage = dashboardPage.LeftSideMenu.WebsitePage;
+            List<WebsiteRisksDataItem> risks = websitePage.SortAndFilter.GetRisks(false).Result;
+            WebsiteRisksDataItem item = risks[0];
+            FlagGrouPopup flagGrouPopup = await item.Flag(); 
+            await flagGrouPopup.SetGroup("test1");
+            Thread.Sleep(5000);
+            bool isFlagged = await item.IsFlagged();
+            bool correct = item.CheckToolTip("test1", "Test Automation", "01/07/2022").Result;
+            List<WebsiteRisksDataItem> risks2 = websitePage.SortAndFilter.GetRisks(true).Result;
+            // ??
+
+
+
+
 
 
             Thread.Sleep(5000);

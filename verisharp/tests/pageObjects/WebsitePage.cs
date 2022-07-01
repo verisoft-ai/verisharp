@@ -1,5 +1,5 @@
 //*****************************************************************************
-// DashboardPage.cs - Page Object for BS dashboard page
+// WebsitePage.cs - Representation of the data when choosing Websites from the side bar
 //
 // VeriSoft Inc., 2022
 //
@@ -20,67 +20,60 @@
 //
 // Code Modification History:
 // ----------------------------------------------------------------------------
-// 06/16/2022 - Nir Gallner
+// 07/01/2022 - Nir Gallner
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-
 namespace Verisoft.Pages
 {
-    public class DashboardPage : BasePage
+    public class WebsitePage : BasePage
     {
-
         #region [ Members ]
-        
-        // Fields
-        private readonly TopMenu m_topMenu;
-        private readonly LeftSideMenu m_leftSideMenu;
-
+        private readonly WebsitesSortAndFilter m_sortAndFilter;
         #endregion
 
         #region [ Constructors ]
-
-        public DashboardPage(IPage page):base(page)
+        public WebsitePage(IPage page) : base(page)
         {
-            m_topMenu = new TopMenu(m_page);
-            m_leftSideMenu = new LeftSideMenu(m_page);
-        }
+            m_sortAndFilter = new WebsitesSortAndFilter(m_page);
 
+        }
         #endregion
 
         #region [ Properties ]
-        public TopMenu TopMenu
+        public WebsitesSortAndFilter SortAndFilter
         {
             get
             {
-                return this.m_topMenu;
-            }
-        }
-
-        public LeftSideMenu LeftSideMenu
-        {
-            get
-            {
-                return this.m_leftSideMenu;
+                return gotoWebSitesSortAndFilter().Result;
 
             }
         }
-        
         #endregion
 
         #region [ Methods ]
-        public override async Task<bool> IsOnPage()
+        public override Task<bool> IsOnPage()
         {
-            return await base.IsOnPage(m_page, "");
+            return base.IsOnPage(m_page, "//div[text()='Websites']");
         }
-        
-        #endregion
 
+        private async Task<WebsitesSortAndFilter> gotoWebSitesSortAndFilter()
+        {
+
+            IElementHandle? handle = m_page.QuerySelectorAsync("(//span[text()='Sort & Filter '])[2]").Result;
+            if (handle != null)
+            {
+                await handle.ClickAsync();
+            }
+            else
+            {
+                await m_page.Locator("//span[@data-testid='filtersCount' and contains(text(),'Sort & Filter ')]").ClickAsync();
+            }
+
+
+            return new WebsitesSortAndFilter(m_page);
+        }
+        #endregion
     }
 }

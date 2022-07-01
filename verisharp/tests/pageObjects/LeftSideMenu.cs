@@ -1,5 +1,5 @@
 //*****************************************************************************
-// DashboardPage.cs - Page Object for BS dashboard page
+// LeftSideMenu.cs - Representation of the left side menu in the dashboard
 //
 // VeriSoft Inc., 2022
 //
@@ -20,67 +20,53 @@
 //
 // Code Modification History:
 // ----------------------------------------------------------------------------
-// 06/16/2022 - Nir Gallner
+// 07/01/2022 - Nir Gallner
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
-
 namespace Verisoft.Pages
 {
-    public class DashboardPage : BasePage
+    public class LeftSideMenu : BasePage
     {
-
         #region [ Members ]
+        private readonly ILocator m_dashboardSelector;
+        private readonly ILocator m_websitesSelector;
+        private readonly ILocator m_risksSelector;
         
-        // Fields
-        private readonly TopMenu m_topMenu;
-        private readonly LeftSideMenu m_leftSideMenu;
-
         #endregion
 
-        #region [ Constructors ]
-
-        public DashboardPage(IPage page):base(page)
+        #region [ Constructor ]
+        public LeftSideMenu(IPage page):base(page)
         {
-            m_topMenu = new TopMenu(m_page);
-            m_leftSideMenu = new LeftSideMenu(m_page);
+            m_dashboardSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Dashboard']");
+            m_websitesSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Websites']");
+            m_risksSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Risks']");
         }
-
         #endregion
 
         #region [ Properties ]
-        public TopMenu TopMenu
+        public WebsitePage WebsitePage
         {
             get
             {
-                return this.m_topMenu;
+                 return gotoWebSites().Result;
+                
             }
         }
-
-        public LeftSideMenu LeftSideMenu
-        {
-            get
-            {
-                return this.m_leftSideMenu;
-
-            }
-        }
-        
         #endregion
 
         #region [ Methods ]
-        public override async Task<bool> IsOnPage()
+        public override Task<bool> IsOnPage()
         {
-            return await base.IsOnPage(m_page, "");
+            return base.IsOnPage(m_page, "//*[@data-testid='listItemText']/span[text()='Dashboard']");
         }
         
+        private async Task<WebsitePage> gotoWebSites()
+        {
+            await m_websitesSelector.ClickAsync();
+            return new WebsitePage(m_page);
+        }
         #endregion
-
     }
 }

@@ -49,9 +49,9 @@ namespace Verisoft.Pages
         public LoginPage(IPage page): base(page)
         {
             // Assign identifiers
-            m_txtUserName = m_page.Locator("input[name ='userName']");
-            m_txtPassword = m_page.Locator("input[name ='password']");
-            m_btnLogin = m_page.Locator("[data-testid ='logInButton']");
+            m_txtUserName = m_page.Locator("//input[@name='userName']");
+            m_txtPassword = m_page.Locator("//input[@name ='password']");
+            m_btnLogin = m_page.Locator("//form/div[2]/button/span[1]");
             m_lnkForgotPassword = m_page.Locator("a[data-testid ='forgotPasswordLink']");
         }
 
