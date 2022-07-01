@@ -63,6 +63,7 @@ namespace Verisoft.Pages
         {
             await m_companySelector.ClickAsync();
             await m_page.Locator("text=" + company).ClickAsync();
+            await m_companySelector.WaitForAsync();
             return this;
         }
 
@@ -70,9 +71,19 @@ namespace Verisoft.Pages
         {
             await m_brandSelector.ClickAsync();
             await m_page.Locator("text=" + brand).ClickAsync();
+            await m_companySelector.WaitForAsync();
             return this;
         }
 
+        public async Task<string> Company()
+        {
+            return await m_companySelector.InnerTextAsync();
+        }
+
+        public async Task<string> Brand()
+        {
+            return await m_brandSelector.InnerTextAsync();
+        }
         #endregion
     }
 }

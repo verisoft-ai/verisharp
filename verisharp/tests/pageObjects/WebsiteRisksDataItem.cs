@@ -34,6 +34,7 @@ namespace Verisoft.Pages
         #region [ Members ]
         private IElementHandle m_item;
         private IPage m_page;
+        private string m_itemName;
         #endregion
 
         #region [ Constructors ]
@@ -41,10 +42,19 @@ namespace Verisoft.Pages
         {
             m_page = page;
             m_item = handle;
+            m_itemName = handle.QuerySelectorAsync(".LinkWithTrack_clickableItem__X8IOt").Result.InnerTextAsync().Result;
         }
         #endregion
 
         #region [ Properties ]
+        public string Name
+        {
+            get
+            {
+                return m_itemName;
+
+            }
+        }
         #endregion
 
         #region [ Methods ]
@@ -67,6 +77,7 @@ namespace Verisoft.Pages
         public async Task<bool> CheckToolTip(string group, string user, string date)
         {
             IElementHandle handle = await GetFlag();
+            Thread.Sleep(1000);
             await handle.HoverAsync();
             Thread.Sleep(1000);
             IReadOnlyCollection<IElementHandle> toolTipData = m_page.QuerySelectorAllAsync("//ul[@class='FlagDropdownOverlay_list__wuE9Z']/li").Result;
@@ -75,10 +86,13 @@ namespace Verisoft.Pages
                 throw new Exception("Could not locate the tooltip");
             }
 
-            string toolTipGroup = toolTipData.ElementAt(0).QuerySelectorAsync("//*[@class='FlagDropdownOverlay_groupName__KGGhw']").Result.TextContentAsync().Result;
-            string toolTipUser = toolTipData.ElementAt(1).TextContentAsync().Result;
-            string toolTipDate = toolTipData.ElementAt(2).TextContentAsync().Result;
+            string? toolTipGroup = toolTipData.ElementAt(0).QuerySelectorAsync("//*[@class='FlagDropdownOverlay_groupName__KGGhw']").Result.TextContentAsync().Result;
+            string? toolTipUser = toolTipData.ElementAt(1).TextContentAsync().Result;
+            string? toolTipDate = toolTipData.ElementAt(2).TextContentAsync().Result;
 
+            if (toolTipGroup == null || toolTipUser == null || toolTipDate == null)
+                return false;
+                
             return (toolTipGroup == group) && (toolTipUser.Substring(6).Trim() == user) && (toolTipDate.Substring(6).Trim() == date);
 
 

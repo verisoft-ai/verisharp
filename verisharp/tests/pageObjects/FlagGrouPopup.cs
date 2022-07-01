@@ -24,7 +24,6 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-using System.Runtime.CompilerServices;
 using Microsoft.Playwright;
 namespace Verisoft.Pages
 {
@@ -34,6 +33,7 @@ namespace Verisoft.Pages
         private readonly ILocator m_groupNameText;
         private readonly ILocator m_addGroup;
         private readonly ILocator m_flag;
+
         #endregion
 
         #region [ Constructors ]
@@ -43,9 +43,7 @@ namespace Verisoft.Pages
             m_addGroup = m_page.Locator("//div[@class='FlagGroups_square__NRdVW']");
             m_flag = m_page.Locator("//*[text()=' flag']");
         }
-        #endregion
 
-        #region [ Properties ]
         #endregion
 
         #region [ Methods ]
@@ -82,11 +80,8 @@ namespace Verisoft.Pages
             await m_addGroup.ClickAsync();
             await m_page.Locator("//input[@placeholder='Enter new group name']").FillAsync(group);
             await m_flag.ClickAsync();
-
-
-
-
         }
+
         #endregion
     }
 }

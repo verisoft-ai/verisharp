@@ -26,18 +26,17 @@
 //*****************************************************************************
 
 using Microsoft.Playwright;
-using System.Net.Http.Headers;
-using System.Reflection.Metadata;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// Representation of the BrandShield dashboard page. Currently contains the top menu and the left menu.
+    /// </summary>
     public class DashboardPage : BasePage
     {
 
         #region [ Members ]
-        
+
         // Fields
         private readonly TopMenu m_topMenu;
         private readonly LeftSideMenu m_leftSideMenu;
@@ -46,15 +45,19 @@ namespace Verisoft.Pages
 
         #region [ Constructors ]
 
-        public DashboardPage(IPage page):base(page)
+        public DashboardPage(IPage page) : base(page)
         {
             m_topMenu = new TopMenu(m_page);
             m_leftSideMenu = new LeftSideMenu(m_page);
+
         }
 
         #endregion
 
         #region [ Properties ]
+        /// <summary>
+        /// Retrieves the TopMenu object
+        /// </summary>
         public TopMenu TopMenu
         {
             get
@@ -63,6 +66,9 @@ namespace Verisoft.Pages
             }
         }
 
+        /// <summary>
+        /// Retrieves the LeftSideMenu object
+        /// </summary>
         public LeftSideMenu LeftSideMenu
         {
             get
@@ -71,15 +77,15 @@ namespace Verisoft.Pages
 
             }
         }
-        
+
         #endregion
 
         #region [ Methods ]
         public override async Task<bool> IsOnPage()
         {
-            return await base.IsOnPage(m_page, "");
+            return await base.IsOnPage(m_page, "//*[@data-testid='menuListDropDownSelector']");
         }
-        
+
         #endregion
 
     }

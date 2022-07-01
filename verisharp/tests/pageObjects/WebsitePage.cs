@@ -31,12 +31,14 @@ namespace Verisoft.Pages
     {
         #region [ Members ]
         private readonly WebsitesSortAndFilter m_sortAndFilter;
+        private readonly ILocator m_search;
         #endregion
 
         #region [ Constructors ]
         public WebsitePage(IPage page) : base(page)
         {
             m_sortAndFilter = new WebsitesSortAndFilter(m_page);
+            m_search = m_page.Locator("//input[@placeholder='Search...']");
 
         }
         #endregion
@@ -61,18 +63,22 @@ namespace Verisoft.Pages
         private async Task<WebsitesSortAndFilter> gotoWebSitesSortAndFilter()
         {
 
+            Thread.Sleep(1000);
             IElementHandle? handle = m_page.QuerySelectorAsync("(//span[text()='Sort & Filter '])[2]").Result;
+            Thread.Sleep(500);
             if (handle != null)
             {
-                await handle.ClickAsync();
+                await m_page.Locator("(//span[text()='Sort & Filter '])[2]").ClickAsync();
             }
-            else
-            {
-                await m_page.Locator("//span[@data-testid='filtersCount' and contains(text(),'Sort & Filter ')]").ClickAsync();
-            }
-
 
             return new WebsitesSortAndFilter(m_page);
+        }
+
+        public async Task<WebsitePage> Search(string term)
+        {
+            await m_search.FillAsync(term);
+            await m_page.Keyboard.PressAsync("Enter");
+            return this;
         }
         #endregion
     }

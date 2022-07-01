@@ -79,6 +79,29 @@ namespace Verisoft.Pages
             return websiteRisksDataItem;
         }
 
+        public List<WebsiteRisksDataItem> GetRisks()
+        {
+            IReadOnlyCollection<IElementHandle> flaggedContent = m_page.QuerySelectorAllAsync("//*[@class='List_root__KZ4p']/li").Result;
+
+            List<WebsiteRisksDataItem> websiteRisksDataItem = new List<WebsiteRisksDataItem>();
+            foreach (IElementHandle item in flaggedContent)
+            {
+                websiteRisksDataItem.Add(new WebsiteRisksDataItem(m_page, item));
+            }
+
+            return websiteRisksDataItem;
+        }
+
+        public WebsitesSortAndFilter ClearFilters()
+        {
+            Thread.Sleep(500);
+            IElementHandle? handle = m_page.QuerySelectorAsync("//span[text()='Reset All']").Result;
+            if (handle != null)
+            {
+                handle.ClickAsync();
+            }
+            return this;
+        }
         #endregion
     }
 }

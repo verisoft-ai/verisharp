@@ -15,7 +15,10 @@
             "cwd": "${workspaceFolder}/verisharp",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
-            "stopAtEntry": false
+            "stopAtEntry": false,
+            "env": {
+                "env.url": "https://testing.brandshield.com"
+            }
         },
         {
             "name": ".NET Core Attach",

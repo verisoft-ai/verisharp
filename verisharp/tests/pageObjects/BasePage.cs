@@ -28,6 +28,10 @@
 using Microsoft.Playwright;
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// This page is the base of all pages. It keeps the page as a protected varialble to be accessed to all children,
+    /// and provides an interface to IsOnPage(), to be implemented in the children classes.
+    /// </summary>
     public abstract class BasePage : WebPage
     {
         #region [ Members ]
@@ -40,6 +44,10 @@ namespace Verisoft.Pages
 
         #region [ Constructors ]
 
+        /// <summary>
+        /// C-tor, just keeps the given page
+        /// </summary>
+        /// <param name="page">playwright given page</param>
         public BasePage(IPage page)
         {
             m_page = page;
@@ -50,12 +58,23 @@ namespace Verisoft.Pages
 
         #region [ Methods ]
 
+        /// <summary>
+        /// Is playwright page on the right page? Use selector to find out 
+        /// </summary>
+        /// <param name="page">Page to look in</param>
+        /// <param name="locator">Locator to find within the page</param>
+        /// <returns>true - on page, false - not on page</returns>
         public async Task<bool> IsOnPage(IPage page, string locator)
         {
-            return await page.Locator(locator).IsVisibleAsync();
-
+            var element = page.Locator(locator);
+            await element.WaitForAsync();
+            return await element.IsVisibleAsync();
         }
 
+        /// <summary>
+        /// Is playwright page on the right page? Use selector to find out 
+        /// </summary>
+        /// <returns>true - on page, false - not on page</returns>
         public abstract Task<bool> IsOnPage();
 
         #endregion
