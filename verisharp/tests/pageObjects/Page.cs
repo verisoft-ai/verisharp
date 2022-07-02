@@ -24,10 +24,14 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
+
 namespace Verisoft.Pages
 {
+
+    /// <summary>
+    /// A generic page representation
+    /// </summary>
     public interface Page
     {
         /// <summary>

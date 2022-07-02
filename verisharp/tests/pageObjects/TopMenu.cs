@@ -28,10 +28,14 @@ using Microsoft.Playwright;
 
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// Web part which represents the dashboard top menu (with logo, company and brand, user details etc.)
+    /// </summary>
     public class TopMenu : BasePage
     {
         #region [ Members ]
 
+        // Fields
         private readonly ILocator m_companySelector;
         private readonly ILocator m_brandSelector;
         private readonly ILocator m_btnUserDetails;
@@ -39,8 +43,13 @@ namespace Verisoft.Pages
 
         #endregion
 
+
         #region [ Constructor ]
 
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>u
         public TopMenu(IPage page) : base(page)
         {
             //*[@data-testid='dropMenu'] 
@@ -48,10 +57,38 @@ namespace Verisoft.Pages
             m_brandSelector = m_page.Locator("//*[@data-testid='dropMenu'] //*[text() ='Brand:']/ancestor::div[@data-testid='dropMenu']//span[@class='MuiIconButton-label']/span[1]");
             m_btnUserDetails = m_page.Locator("div[data-testid='menuListDropDownSelector']");
             m_btnHelp = m_page.Locator("#simpoPlusBtn");
-
         }
 
         #endregion
+
+
+        #region [ Properties ]
+
+        /// <summary>
+        /// Returns the current company
+        /// </summary>
+        public string Company
+        {
+            get
+            {
+                return m_companySelector.InnerTextAsync().Result;
+            }
+        }
+
+
+        /// <summary>
+        /// Returns the current brand
+        /// </summary>
+        public string Brand
+        {
+            get
+            {
+                return m_brandSelector.InnerTextAsync().Result;
+            }
+        }
+
+        #endregion
+
 
         #region [ Methods ]
         public override Task<bool> IsOnPage()
@@ -59,31 +96,51 @@ namespace Verisoft.Pages
             return base.IsOnPage(m_page, "#simpoPlusBtn");
         }
 
+
+        /// <summary>
+        /// Selects a company from the drop down list
+        /// </summary>
+        /// <param name="company">Company name to switch to</param>
+        /// <returns>this object. Useful for page flow during the test</returns>
         public async Task<TopMenu> withCompany(string company)
         {
             await m_companySelector.ClickAsync();
-            await m_page.Locator("text=" + company).ClickAsync();
+
+            try
+            {
+                await m_page.Locator("text=" + company).ClickAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error selecting company. Could not locate the company name requested - " + company, e);
+            }
+
             await m_companySelector.WaitForAsync();
             return this;
         }
 
+
+        /// <summary>
+        /// Selects a brand from the drop down list
+        /// </summary>
+        /// <param name="brand">Brand name to switch to</param>
+        /// <returns>this object. Useful for page flow during the test</returns>
         public async Task<TopMenu> withBrand(string brand)
         {
             await m_brandSelector.ClickAsync();
-            await m_page.Locator("text=" + brand).ClickAsync();
+            try
+            {
+                await m_page.Locator("text=" + brand).ClickAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error selecting brand. Could not locate the brand name requested - " + brand, e);
+            }
+
             await m_companySelector.WaitForAsync();
             return this;
         }
 
-        public async Task<string> Company()
-        {
-            return await m_companySelector.InnerTextAsync();
-        }
-
-        public async Task<string> Brand()
-        {
-            return await m_brandSelector.InnerTextAsync();
-        }
         #endregion
     }
 }

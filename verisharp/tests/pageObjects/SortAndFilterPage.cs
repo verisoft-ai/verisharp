@@ -1,5 +1,5 @@
 //*****************************************************************************
-// MainDataArea.cs - Representation of the main data area in the sytem
+// SortAndFilterPage.cs - Representation of the generic sort and filter page
 //
 // VeriSoft Inc., 2022
 //
@@ -28,34 +28,51 @@ using Microsoft.Playwright;
 
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// An abstract representation of the sort and filter page. 
+    /// All sort and filter pages derive from this class
+    /// </summary>
     public class SortAndFilterPage : BasePage
     {
         #region [ Members ]
+
+        // Fields
         private readonly ILocator m_apply;
-        
 
         #endregion
 
+
         #region [ Constructors ]
-        
-        public SortAndFilterPage(IPage page):base(page)
+
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public SortAndFilterPage(IPage page) : base(page)
         {
             m_apply = m_page.Locator("//*[@id='appView']//*[text()='Apply']");
 
         }
+
         #endregion
 
+
         #region [ Methods ]
+
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//*[@id='appView']//*[text()='Apply']");
         }
-        
+
+        /// <summary>
+        /// Clicks on the apply button
+        /// </summary>
+        /// <returns>void</returns>
         public async Task Apply()
         {
             await m_apply.ClickAsync();
         }
+
         #endregion
     }
 }
-

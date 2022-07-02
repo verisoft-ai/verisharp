@@ -24,29 +24,31 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
-using System.Threading.Tasks;
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
 {
     public class LoginPage : BasePage
     {
-        
+
         #region [ Members ]
-        
+
         // Fields
         private readonly ILocator m_txtUserName;
         private readonly ILocator m_txtPassword;
         private readonly ILocator m_btnLogin;
         private readonly ILocator m_lnkForgotPassword;
-        
+
         #endregion
 
 
         #region [ Constructors ]
 
-        public LoginPage(IPage page): base(page)
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public LoginPage(IPage page) : base(page)
         {
             // Assign identifiers
             m_txtUserName = m_page.Locator("//input[@name='userName']");
@@ -57,19 +59,32 @@ namespace Verisoft.Pages
 
         #endregion
 
+
         #region [ Methods ]
 
-        public async Task clickLogin()
+        /// <summary>
+        /// Just click on the login button
+        /// </summary>
+        /// <returns>A new DashboardPage object to ease the test flow</returns>
+        public async Task<DashboardPage> clickLogin()
         {
             await m_btnLogin.ClickAsync();
+            return new DashboardPage(m_page);
         }
 
+
+        /// <summary>
+        /// Performs login process - Inserts username, inserts password, and clicks on the login button
+        /// </summary>
+        /// <param name="userName">username</param>
+        /// <param name="password">password</param>
+        /// <returns>A new DashboardPage object to ease the test flow</returns>
         public async Task<DashboardPage> Login(string userName, string password)
         {
             await m_txtUserName.FillAsync(userName);
             await m_txtPassword.FillAsync(password);
             await m_btnLogin.ClickAsync();
-            
+
             return new DashboardPage(m_page);
         }
 
@@ -77,9 +92,7 @@ namespace Verisoft.Pages
         {
             return await base.IsOnPage(m_page, "[data-testid ='logInButton']");
         }
-        
+
         #endregion
-
-
     }
 }

@@ -25,61 +25,91 @@
 //
 //*****************************************************************************
 using Microsoft.Playwright;
+
 namespace Verisoft.Pages
 {
-    public class WebsitePage : BasePage
+
+    /// <summary>
+    /// A representation of the BrandShield websites page
+    /// </summary>
+    public class WebsitesPage : BasePage
     {
         #region [ Members ]
-        private readonly WebsitesSortAndFilter m_sortAndFilter;
+
+        // Fields
+        private readonly WebsitesSortAndFilterPage m_sortAndFilter;
         private readonly ILocator m_search;
+
         #endregion
+
 
         #region [ Constructors ]
-        public WebsitePage(IPage page) : base(page)
-        {
-            m_sortAndFilter = new WebsitesSortAndFilter(m_page);
-            m_search = m_page.Locator("//input[@placeholder='Search...']");
 
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public WebsitesPage(IPage page) : base(page)
+        {
+            m_sortAndFilter = new WebsitesSortAndFilterPage(m_page);
+            m_search = m_page.Locator("//input[@placeholder='Search...']");
         }
+
         #endregion
 
+
         #region [ Properties ]
-        public WebsitesSortAndFilter SortAndFilter
+
+        /// <summary>
+        /// Retrieves the WebsitesSortAndFilter object, which is a part of the Websites page
+        /// </summary>
+        public WebsitesSortAndFilterPage SortAndFilter
         {
             get
             {
-                return gotoWebSitesSortAndFilter().Result;
-
+                return GotoWebSitesSortAndFilter().Result;
             }
         }
+
         #endregion
 
+
         #region [ Methods ]
+
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//div[text()='Websites']");
         }
 
-        private async Task<WebsitesSortAndFilter> gotoWebSitesSortAndFilter()
-        {
 
+        /// <summary>
+        /// Opens up the websites sort and filter menu, if it is not already opened
+        /// </summary>
+        /// <returns>WebsitesSortAndFilter object</returns>
+        private async Task<WebsitesSortAndFilterPage> GotoWebSitesSortAndFilter()
+        {
             Thread.Sleep(1000);
             IElementHandle? handle = m_page.QuerySelectorAsync("(//span[text()='Sort & Filter '])[2]").Result;
             Thread.Sleep(500);
             if (handle != null)
-            {
                 await m_page.Locator("(//span[text()='Sort & Filter '])[2]").ClickAsync();
-            }
 
-            return new WebsitesSortAndFilter(m_page);
+            return new WebsitesSortAndFilterPage(m_page);
         }
 
-        public async Task<WebsitePage> Search(string term)
+
+        /// <summary>
+        /// Search for a given term within the websites page
+        /// </summary>
+        /// <param name="term">Term to search</param>
+        /// <returns>this object. Useful for page flow process during the test</returns>
+        public async Task<WebsitesPage> Search(string term)
         {
             await m_search.FillAsync(term);
             await m_page.Keyboard.PressAsync("Enter");
             return this;
         }
+
         #endregion
     }
 }

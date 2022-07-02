@@ -25,19 +25,32 @@
 //
 //*****************************************************************************
 using Microsoft.Playwright;
+
 namespace Verisoft.Pages
 {
-    public class FlagGrouPopup : BasePage
+    /// <summary>
+    /// Representation of the flag add to group popup.
+    /// </summary>
+    public class FlagGroupPopup : BasePage
     {
+
         #region [ Members ]
-        private readonly ILocator m_groupNameText;
-        private readonly ILocator m_addGroup;
-        private readonly ILocator m_flag;
+
+        // Fields
+        private readonly ILocator m_groupNameText;  // Search group name text box
+        private readonly ILocator m_addGroup;       // Add new group + button
+        private readonly ILocator m_flag;           // Flag button
 
         #endregion
 
+
         #region [ Constructors ]
-        public FlagGrouPopup(IPage page) : base(page)
+
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public FlagGroupPopup(IPage page) : base(page)
         {
             m_groupNameText = m_page.Locator("//input[@placeholder='Search group name...']");
             m_addGroup = m_page.Locator("//div[@class='FlagGroups_square__NRdVW']");
@@ -46,19 +59,34 @@ namespace Verisoft.Pages
 
         #endregion
 
+
         #region [ Methods ]
+
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//*[text()=' flag']");
         }
 
-        public async Task<FlagGrouPopup> WithGroup(string group)
+
+        /// <summary>
+        /// Inserts group name into the textbox to search the group. 
+        /// </summary>
+        /// <param name="group">Group name to search</param>
+        /// <returns>this object, useful for chained methods</returns>
+        public async Task<FlagGroupPopup> WithGroup(string group)
         {
             await m_groupNameText.FillAsync(group);
             return this;
-
         }
 
+        /// <summary>
+        /// Entire process of adding a group to the flag. It does the following:
+        /// 1. Insert the group into the text box
+        /// 2. If the group is found according to the group received, select it and click on the flag button
+        /// 3. If the group is not found, click on the add group icon and add a new group
+        /// </summary>
+        /// <param name="group">Name of the group to add</param>
+        /// <returns>void, basically</returns>
         public async Task SetGroup(string group)
         {
             await m_groupNameText.FillAsync(group);
@@ -80,6 +108,7 @@ namespace Verisoft.Pages
             await m_addGroup.ClickAsync();
             await m_page.Locator("//input[@placeholder='Enter new group name']").FillAsync(group);
             await m_flag.ClickAsync();
+            return;
         }
 
         #endregion

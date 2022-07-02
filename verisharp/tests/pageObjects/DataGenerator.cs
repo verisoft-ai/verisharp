@@ -33,6 +33,9 @@ namespace Verisoft
     /// </summary>
     class DataGenerator
     {
+
+        #region [ Static ]
+
         /// <summary>
         /// userFullName, username, password, company, brand
         /// </summary>
@@ -43,5 +46,7 @@ namespace Verisoft
                 "Test Automation", "Test.Auto", "Nglr!2022", "TTI", "Ryobi"
             }
         };
+
+        #endregion
     }
 }

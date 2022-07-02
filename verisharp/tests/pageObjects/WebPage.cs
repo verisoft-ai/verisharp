@@ -24,11 +24,12 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// Interface representation of a web page. 
+    /// </summary>
     public interface WebPage : Page
     {
-
     }
 }

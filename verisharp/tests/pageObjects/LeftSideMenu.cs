@@ -25,48 +25,70 @@
 //
 //*****************************************************************************
 using Microsoft.Playwright;
+
 namespace Verisoft.Pages
 {
+    /// <summary>
+    /// Representation of the BrandShield left side menu, currently in an opened position
+    /// </summary>
     public class LeftSideMenu : BasePage
     {
         #region [ Members ]
+
+        // Fields
         private readonly ILocator m_dashboardSelector;
         private readonly ILocator m_websitesSelector;
-        private readonly ILocator m_risksSelector;
-        
+        private readonly ILocator m_risksSelector;      // Websites sub menu selector
+
         #endregion
 
+
         #region [ Constructor ]
-        public LeftSideMenu(IPage page):base(page)
+
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public LeftSideMenu(IPage page) : base(page)
         {
             m_dashboardSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Dashboard']");
             m_websitesSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Websites']");
             m_risksSelector = m_page.Locator("//*[@data-testid='listItemText']/span[text()='Risks']");
         }
+
         #endregion
 
+
         #region [ Properties ]
-        public WebsitePage WebsitePage
+
+        public WebsitesPage WebsitePage
         {
             get
             {
-                 return gotoWebSites().Result;
-                
+                return GotoWebSites().Result;
             }
         }
+
         #endregion
 
+
         #region [ Methods ]
+
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//*[@data-testid='listItemText']/span[text()='Dashboard']");
         }
-        
-        private async Task<WebsitePage> gotoWebSites()
+
+        /// <summary>
+        /// Clicks on the websites page. Currently only supports visible sidebar
+        /// </summary>
+        /// <returns>A new WebsitePage object</returns>
+        private async Task<WebsitesPage> GotoWebSites()
         {
             await m_websitesSelector.ClickAsync();
-            return new WebsitePage(m_page);
+            return new WebsitesPage(m_page);
         }
+
         #endregion
     }
 }

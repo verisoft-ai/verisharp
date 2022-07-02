@@ -24,7 +24,6 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
-
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
@@ -43,16 +42,22 @@ namespace Verisoft.Pages
 
         #endregion
 
+
         #region [ Constructors ]
 
+
+        /// <summary>
+        /// Default c-tor. Initializes the fields using page, and saves the page
+        /// </summary>
+        /// <param name="page">playwright IPage object</param>
         public DashboardPage(IPage page) : base(page)
         {
             m_topMenu = new TopMenu(m_page);
             m_leftSideMenu = new LeftSideMenu(m_page);
-
         }
 
         #endregion
+
 
         #region [ Properties ]
         /// <summary>
@@ -74,11 +79,11 @@ namespace Verisoft.Pages
             get
             {
                 return this.m_leftSideMenu;
-
             }
         }
 
         #endregion
+
 
         #region [ Methods ]
         public override async Task<bool> IsOnPage()
@@ -87,6 +92,5 @@ namespace Verisoft.Pages
         }
 
         #endregion
-
     }
 }

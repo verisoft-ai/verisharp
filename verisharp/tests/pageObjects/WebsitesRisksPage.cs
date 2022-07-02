@@ -25,32 +25,49 @@
 //
 //*****************************************************************************
 using Microsoft.Playwright;
+
 namespace Verisoft.Pages
 {
-    public class RisksPage : WebsitePage
+    /// <summary>
+    /// Representation of the Websites - Risks page
+    /// </summary>
+    public class WebsitesRisksPage : WebsitesPage
     {
         #region [ Members ]
-        private readonly ILocator m_title;
+
+        // Fields
+        private readonly ILocator m_title;              // Should hold the placeholder where is shows "Risks" (without "WEBSITES")
         private readonly ILocator m_sumOfAllRisks;
         private readonly ILocator m_sumOfFlaggedRisks;
         private readonly ILocator m_sumOfNewRisks;
+
         #endregion
 
+
         #region [ Constructors ]
-        public RisksPage(IPage page): base(page)
+
+        /// <summary>
+        /// Default c-tor. Initializes all locators on page with the Ipage, and saves the page
+        /// </summary>
+        /// <param name="page">Playwright IPage object</param>
+        public WebsitesRisksPage(IPage page) : base(page)
         {
             m_title = m_page.Locator("//div[text()='Risks']");
             m_sumOfAllRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[1]");
             m_sumOfFlaggedRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[3]");
             m_sumOfNewRisks = m_page.Locator("(//*[@data-testid='filtersGroup']//div[@class='CategoryCountersFilters_count__mLiq6'])[2]");
         }
+
         #endregion
 
+
         #region [ Methods ]
+
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//div[text()='Risks']");
         }
+
         #endregion
     }
 }

@@ -33,7 +33,6 @@ using Verisoft.Core;
 
 namespace Verisoft.Tests
 {
-    
 
     [TestFixture]
     public class WebsiteModuleTests
@@ -52,9 +51,7 @@ namespace Verisoft.Tests
             // TODO: put this somewhere else
             string? url = Environment.GetEnvironmentVariable("env.url");
             if (url == null)
-            {
                 throw new Exception("url cannot be null");
-            }
 
             // Login to brandshield
             await page.GotoAsync(url);
@@ -67,25 +64,25 @@ namespace Verisoft.Tests
             // Select company and brand
             await dashboardPage.TopMenu.withCompany(company).Result.withBrand(brand);
             Thread.Sleep(1000);
-            Assert.AreEqual(company, dashboardPage.TopMenu.Company().Result, "Company should be as expected after change");
-            Assert.AreEqual(brand, dashboardPage.TopMenu.Brand().Result, "Brand should be as expected after change");
+            Assert.AreEqual(company, dashboardPage.TopMenu.Company, "Company should be as expected after change");
+            Assert.AreEqual(brand, dashboardPage.TopMenu.Brand, "Brand should be as expected after change");
 
             // Goto unflagged website
-            WebsitePage websitePage = dashboardPage.LeftSideMenu.WebsitePage;
+            WebsitesPage websitePage = dashboardPage.LeftSideMenu.WebsitePage;
             List<WebsiteRisksDataItem> risks = websitePage.SortAndFilter.GetRisks(false).Result;
 
             // Flag the first result
             WebsiteRisksDataItem item = risks[0];
-            FlagGrouPopup flagGrouPopup = await item.Flag();
+            FlagGroupPopup flagGrouPopup = await item.Flag();
 
             string groupName = "test1";
             await flagGrouPopup.SetGroup(groupName);
 
             // Check if the item is flagged and toolTip is OK
             bool isFlagged = await item.IsFlagged();
-            
+
             string date = DateTime.Now.ToString("dd/MM/yyyy");
-            bool correct = await item.CheckToolTip(groupName, userFullName, date);
+            bool correct = await item.ValidateToolTipData(groupName, userFullName, date);
 
 
             // Search the item in the flagged area, make sure it is there
