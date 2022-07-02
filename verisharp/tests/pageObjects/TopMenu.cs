@@ -67,7 +67,7 @@ namespace Verisoft.Pages
         /// <summary>
         /// Returns the current company
         /// </summary>
-        public string Company
+        public string CompanyName
         {
             get
             {
@@ -79,11 +79,33 @@ namespace Verisoft.Pages
         /// <summary>
         /// Returns the current brand
         /// </summary>
-        public string Brand
+        public string BrandName
         {
             get
             {
                 return m_brandSelector.InnerTextAsync().Result;
+            }
+        }
+
+        /// <summary>
+        /// Returns the ILocator for company
+        /// </summary>
+        public ILocator Company
+        {
+            get
+            {
+                return m_companySelector;
+            }
+        }
+
+        /// <summary>
+        /// Returns the ILocator for brand
+        /// </summary>
+        public ILocator Brand
+        {
+            get
+            {
+                return m_brandSelector;
             }
         }
 
@@ -108,7 +130,9 @@ namespace Verisoft.Pages
 
             try
             {
-                await m_page.Locator("text=" + company).ClickAsync();
+                ILocator locator = m_page.Locator("text=" + company);
+                await locator.ClickAsync();
+
             }
             catch (Exception e)
             {
@@ -131,6 +155,7 @@ namespace Verisoft.Pages
             try
             {
                 await m_page.Locator("text=" + brand).ClickAsync();
+                await m_page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
             }
             catch (Exception e)
             {

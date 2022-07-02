@@ -24,6 +24,7 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
+
 namespace Verisoft.Pages
 {
     /// <summary>

@@ -24,6 +24,8 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
+using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
@@ -33,9 +35,9 @@ namespace Verisoft.Pages
         #region [ Members ]
 
         // Fields
-        private IElementHandle m_item;          // Representation of a single line in the risks list
         private IPage m_page;
         private string m_itemName;              // Name of the item, which holds the link to the website
+        private ILocator m_flagLocator;
 
         #endregion
 
@@ -52,9 +54,10 @@ namespace Verisoft.Pages
         public WebsiteRisksDataItem(IPage page, IElementHandle handle)
         {
             m_page = page;
-            m_item = handle;
             m_itemName = handle.QuerySelectorAsync(".LinkWithTrack_clickableItem__X8IOt").Result.InnerTextAsync().Result;
+            m_flagLocator = m_page.Locator("//*[text()='"+m_itemName+"']//ancestor::li//*[@class='MuiButtonBase-root MuiIconButton-root FlagElement_root__zW5AB']");   
         }
+        
         #endregion
 
 
@@ -82,7 +85,7 @@ namespace Verisoft.Pages
         /// <returns>Flag pop up object</returns>
         public async Task<FlagGroupPopup> Flag()
         {
-            await GetFlag().Result.ClickAsync();
+            await m_flagLocator.ClickAsync();
 
             // TODO: change this. what if it was already flagged?
             return new FlagGroupPopup(m_page);
@@ -95,7 +98,7 @@ namespace Verisoft.Pages
         /// <returns>true if it is flaggd, flase - otherwise</returns>
         public async Task<bool> IsFlagged()
         {
-            IElementHandle handle = await GetFlag();
+            IElementHandle handle = await m_flagLocator.ElementHandleAsync();
             IReadOnlyCollection<IElementHandle> flaggedContent = handle.QuerySelectorAllAsync("//*[name()='svg']/*[name()='path']").Result;
             return flaggedContent.Count < 2 ? false : true;
         }
@@ -111,10 +114,8 @@ namespace Verisoft.Pages
         /// <exception cref="Exception">If playwright was not able to open the tooltip</exception>
         public async Task<bool> ValidateToolTipData(string group, string user, string date)
         {
-            IElementHandle handle = await GetFlag();
-            Thread.Sleep(1000);
-            await handle.HoverAsync();
-            Thread.Sleep(1000);
+           
+            await m_flagLocator.HoverAsync();
 
             // A flagged object holds a list of the tooltip info - group, user and date
             IReadOnlyCollection<IElementHandle> toolTipData = m_page.QuerySelectorAllAsync("//ul[@class='FlagDropdownOverlay_list__wuE9Z']/li").Result;
@@ -132,23 +133,6 @@ namespace Verisoft.Pages
 
             // Compare the values
             return (toolTipGroup == group) && (toolTipUser.Substring(6).Trim() == user) && (toolTipDate.Substring(6).Trim() == date);
-        }
-
-
-        /// <summary>
-        /// Retrieves a fresh DOM object of the flag object.
-        /// </summary>
-        /// <returns>IElementHandle representation of the flag</returns>
-        /// <exception cref="ArgumentException">If the flag object was not found</exception>
-        private async Task<IElementHandle> GetFlag()
-        {
-            string locator = "//button[@class='MuiButtonBase-root MuiIconButton-root FlagElement_root__zW5AB']";
-            IElementHandle? handle = await m_item.QuerySelectorAsync(locator);
-
-            if (handle != null)
-                return handle;
-            else
-                throw new ArgumentException("Could not find the flag object. Locator " + locator);
         }
 
         #endregion

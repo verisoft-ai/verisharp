@@ -88,11 +88,20 @@ namespace Verisoft.Pages
         /// <returns>WebsitesSortAndFilter object</returns>
         private async Task<WebsitesSortAndFilterPage> GotoWebSitesSortAndFilter()
         {
-            Thread.Sleep(1000);
-            IElementHandle? handle = m_page.QuerySelectorAsync("(//span[text()='Sort & Filter '])[2]").Result;
-            Thread.Sleep(500);
-            if (handle != null)
-                await m_page.Locator("(//span[text()='Sort & Filter '])[2]").ClickAsync();
+            string selector = "(//span[text()='Sort & Filter '])[2]";
+
+            
+            // Wait for the search and filter. If not found, exception will be thrown
+            try
+            {
+                ILocator locator = m_page.Locator(selector);
+                await locator.ClickAsync(new LocatorClickOptions() { Timeout = 3000 });
+            }
+            catch (Exception e)
+            {
+                // No-Op
+                // TODO: add log entry here
+            }
 
             return new WebsitesSortAndFilterPage(m_page);
         }

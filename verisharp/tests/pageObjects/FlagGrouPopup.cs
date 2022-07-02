@@ -90,15 +90,18 @@ namespace Verisoft.Pages
         public async Task SetGroup(string group)
         {
             await m_groupNameText.FillAsync(group);
-            Thread.Sleep(1000);
 
-            IReadOnlyCollection<IElementHandle> groups = m_page.QuerySelectorAllAsync("//ul[@class='MuiList-root FlagGroups_listStyle__P1lY1']/li").Result;
+            // Wait for the page to display the groups
+            string selector = "//ul[@class='MuiList-root FlagGroups_listStyle__P1lY1']/li";
+            await m_page.WaitForSelectorAsync(selector);
+            
+            // Get all pre-saved groups
+            IReadOnlyCollection<IElementHandle> groups = m_page.QuerySelectorAllAsync(selector).Result;
             foreach (var item in groups)
             {
                 if (item.TextContentAsync().Result == group)
                 {
                     await item.ClickAsync();
-                    Thread.Sleep(1000);
                     await m_flag.ClickAsync();
                     return;
                 }

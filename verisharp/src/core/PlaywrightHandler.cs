@@ -28,6 +28,7 @@
 //*****************************************************************************
 using System.ComponentModel;
 using Microsoft.Playwright;
+
 namespace Verisoft.Core
 {
     public class PlaywrightHandler
@@ -44,7 +45,7 @@ namespace Verisoft.Core
         {
             m_browsers = new Dictionary<int, IBrowser>();
             m_pages = new Dictionary<int, IPage>();
-            
+
             IPlaywright playwright = Playwright.CreateAsync().Result;
             m_playwright = playwright;
         }
@@ -52,7 +53,7 @@ namespace Verisoft.Core
         #endregion
 
         #region [ Methods ]
-        
+
         public IBrowser GetNewBrowser()
         {
             // Is there an existing browser?
@@ -60,15 +61,17 @@ namespace Verisoft.Core
 
 
             //Browser
-            var browser = m_playwright.Chromium.LaunchAsync(
+            IBrowser browser = m_playwright.Chromium.LaunchAsync(
                 new BrowserTypeLaunchOptions()
                 {
                     Headless = false
                 }
-            );
+            ).Result;
 
-            m_browsers.Add(threadId, browser.Result);
-            return browser.Result;
+
+
+            m_browsers.Add(threadId, browser);
+            return browser;
         }
 
         public async Task<IPage> GetNewPage()
@@ -87,12 +90,17 @@ namespace Verisoft.Core
             }
 
             // Page
-            IPage page = await browser.NewPageAsync();
+            
+            IPage page = await browser.NewPageAsync(new BrowserNewPageOptions()
+            {
+            });
+            page.SetDefaultTimeout(30000);
             m_pages.Add(browser.GetHashCode(), page);
             return page;
         }
 
         #endregion
+
 
         #region [ Static ]
 

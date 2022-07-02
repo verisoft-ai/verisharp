@@ -61,7 +61,7 @@ namespace Verisoft.Pages
 
         #region [ Properties ]
 
-        public WebsitesPage WebsitePage
+        public WebsitesRisksPage WebsitePage
         {
             get
             {
@@ -83,10 +83,10 @@ namespace Verisoft.Pages
         /// Clicks on the websites page. Currently only supports visible sidebar
         /// </summary>
         /// <returns>A new WebsitePage object</returns>
-        private async Task<WebsitesPage> GotoWebSites()
+        private async Task<WebsitesRisksPage> GotoWebSites()
         {
             await m_websitesSelector.ClickAsync();
-            return new WebsitesPage(m_page);
+            return new WebsitesRisksPage(m_page);
         }
 
         #endregion

@@ -40,6 +40,7 @@ namespace Verisoft.Pages
         private readonly ILocator m_flagged;
         private readonly ILocator m_notFlagged;
 
+
         #endregion
 
 
@@ -79,9 +80,12 @@ namespace Verisoft.Pages
                 await m_notFlagged.ClickAsync();
 
             await this.Apply();
-            Thread.Sleep(3000);
 
-            IReadOnlyCollection<IElementHandle> flaggedContent = m_page.QuerySelectorAllAsync("//*[@class='List_root__KZ4p']/li").Result;
+            string selector = "//*[@class='List_root__KZ4p']/li";
+            await m_page.WaitForLoadStateAsync(LoadState.Load);
+            await m_page.WaitForSelectorAsync(selector);
+
+            IReadOnlyCollection<IElementHandle> flaggedContent = m_page.QuerySelectorAllAsync(selector).Result;
 
             List<WebsiteRisksDataItem> websiteRisksDataItem = new List<WebsiteRisksDataItem>();
             foreach (IElementHandle item in flaggedContent)
@@ -117,14 +121,23 @@ namespace Verisoft.Pages
         /// <returns>this object</returns>
         public WebsitesSortAndFilterPage ClearFilters()
         {
-            Thread.Sleep(500);
-            IElementHandle? handle = m_page.QuerySelectorAsync("//span[text()='Reset All']").Result;
-            if (handle != null)
-                handle.ClickAsync();
 
+            // Wait for the clear filter. Not sure if it's there. If not - skip the exception
+            string selector = "//span[text()='Reset All']";
+            try
+            {
+                ILocator locator = m_page.Locator(selector);
+                locator.ClickAsync(new LocatorClickOptions() { Timeout = 3000 });
+            }
+            catch(Exception e)
+            {
+                //TODO: add log entry here
+                // No-OP
+            }
+            
             return this;
         }
-        
+
         #endregion
     }
 }
