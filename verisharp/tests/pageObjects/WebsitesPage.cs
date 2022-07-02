@@ -71,6 +71,18 @@ namespace Verisoft.Pages
             }
         }
 
+
+        /// <summary>
+        /// Retrieves the search bar locator
+        /// </summary>
+        public ILocator SearchBar
+        {
+            get
+            {
+                return m_search;
+            }
+        }
+
         #endregion
 
 
@@ -90,7 +102,7 @@ namespace Verisoft.Pages
         {
             string selector = "(//span[text()='Sort & Filter '])[2]";
 
-            
+
             // Wait for the search and filter. If not found, exception will be thrown
             try
             {
@@ -112,7 +124,7 @@ namespace Verisoft.Pages
         /// </summary>
         /// <param name="term">Term to search</param>
         /// <returns>this object. Useful for page flow process during the test</returns>
-        public async Task<WebsitesPage> Search(string term)
+        public async Task<WebsitesPage> SearchGroup(string term)
         {
             await m_search.FillAsync(term);
             await m_page.Keyboard.PressAsync("Enter");

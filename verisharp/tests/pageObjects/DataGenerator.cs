@@ -37,13 +37,13 @@ namespace Verisoft
         #region [ Static ]
 
         /// <summary>
-        /// userFullName, username, password, company, brand
+        /// userFullName, username, password, company, brand, groupName
         /// </summary>
         public static object[] User =
         {
             new object[]
             {
-                "Test Automation", "Test.Auto", "Nglr!2022", "TTI", "Ryobi"
+                "Test Automation", "Test.Auto", "Nglr!2022", "TTI", "Ryobi","test1"
             }
         };
 

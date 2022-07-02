@@ -30,16 +30,17 @@ using NUnit.Framework;
 using Microsoft.Playwright;
 using Verisoft.Pages;
 using Verisoft.Core;
+using Microsoft.Playwright.NUnit;
 
 namespace Verisoft.Tests
 {
 
     [TestFixture]
-    public class WebsiteModuleTests
+    public class WebsiteModuleTests : PageTest
     {
 
         [TestCaseSource(typeof(DataGenerator), nameof(DataGenerator.User))]
-        public async Task FlagSanityTest(string userFullName, string username, string password, string company, string brand)
+        public async Task FlagSanityTest(string userFullName, string username, string password, string company, string brand, string groupName)
         {
             // TODO - put this somewhere else
             Environment.SetEnvironmentVariable("env.url", "https://testing.brandshield.com");
@@ -63,19 +64,22 @@ namespace Verisoft.Tests
 
             // Select company and brand
             await dashboardPage.TopMenu.withCompany(company).Result.withBrand(brand);
-            Thread.Sleep(1000);
-            Assert.AreEqual(company, dashboardPage.TopMenu.Company, "Company should be as expected after change");
-            Assert.AreEqual(brand, dashboardPage.TopMenu.Brand, "Brand should be as expected after change");
+            await Expect(dashboardPage.TopMenu.Company).ToHaveTextAsync(company);
+            await Expect(dashboardPage.TopMenu.Brand).ToHaveTextAsync(brand);
+            
 
-            // Goto unflagged website
-            WebsitesPage websitePage = dashboardPage.LeftSideMenu.WebsitePage;
-            List<WebsiteRisksDataItem> risks = websitePage.SortAndFilter.GetRisks(false).Result;
+            // Goto websites
+            WebsitesRisksPage websitesRisksPage = dashboardPage.LeftSideMenu.WebsitePage;
+            FlaggedRisksPage flaggedRisksPage = await websitesRisksPage.GotoFlaggedRisksPage();
+            int numOfGroupRisks = flaggedRisksPage.GetSumOfGroupRisks(groupName);
+            await websitesRisksPage.GotoAllRisksPage();
+
+            List<WebsiteRisksDataItem> risks = websitesRisksPage.SortAndFilter.GetRisks(false).Result;
 
             // Flag the first result
             WebsiteRisksDataItem item = risks[0];
             FlagGroupPopup flagGrouPopup = await item.Flag();
 
-            string groupName = "test1";
             await flagGrouPopup.SetGroup(groupName);
 
             // Check if the item is flagged and toolTip is OK
@@ -86,9 +90,9 @@ namespace Verisoft.Tests
 
 
             // Search the item in the flagged area, make sure it is there
-            await websitePage.SortAndFilter.ClearFilters().GetRisks(true);
-            await websitePage.Search(item.Name);
-            List<WebsiteRisksDataItem> risks2 = websitePage.SortAndFilter.GetRisks();
+            await websitesRisksPage.SortAndFilter.ClearFilters().GetRisks(true);
+            await websitesRisksPage.SearchGroup(item.Name);
+            List<WebsiteRisksDataItem> risks2 = websitesRisksPage.SortAndFilter.GetRisks();
 
             bool result = false;
             foreach (var record in risks2)
@@ -96,7 +100,18 @@ namespace Verisoft.Tests
                 if (record.Name == item.Name)
                     result = true;
             }
+
             Assert.True(result, "Did not find the item");
+
+
+            // Clear filters and go back to flagged risks - make sure the risk is there
+            await websitesRisksPage.SearchGroup("");
+            websitesRisksPage.SortAndFilter.ClearFilters();
+            flaggedRisksPage = await websitesRisksPage.GotoFlaggedRisksPage();
+            int updateNumOfRisks = flaggedRisksPage.GetSumOfGroupRisks(groupName);
+
+            Assert.AreEqual(numOfGroupRisks + 1, updateNumOfRisks, "Risk should increase by 1");
+
         }
     }
 }

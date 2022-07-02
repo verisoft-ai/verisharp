@@ -60,12 +60,63 @@ namespace Verisoft.Pages
 
         #endregion
 
+        #region [ Properties ]
+        public ILocator Title
+        {
+            get
+            {
+                return m_title;
+            }
+        }
+
+        public ILocator AllRisks
+        {
+            get
+            {
+                return m_sumOfAllRisks;
+            }
+        }
+
+
+        public ILocator FlaggedRisks
+        {
+            get
+            {
+                return m_sumOfFlaggedRisks;
+            }
+        }
+
+        #endregion
 
         #region [ Methods ]
 
         public override Task<bool> IsOnPage()
         {
             return base.IsOnPage(m_page, "//div[text()='Risks']");
+        }
+
+
+        /// <summary>
+        /// Navigates to the flagged risk page
+        /// TODO: better to have one Goto method, with receives an enum with the page name
+        /// </summary>
+        /// <returns>A new FlaggedRisksPage object</returns>
+        public async Task<FlaggedRisksPage> GotoFlaggedRisksPage()
+        {
+            await m_sumOfFlaggedRisks.ClickAsync();
+            return new FlaggedRisksPage(m_page);
+        }
+
+
+        /// <summary>
+        /// Navigates to the all risk page
+        /// TODO: better to have one Goto method, with receives an enum with the page name
+        /// </summary>
+        /// <returns>this object</returns>
+        public async Task<WebsitesRisksPage> GotoAllRisksPage()
+        {
+            await m_sumOfAllRisks.ClickAsync();
+            return this;
         }
 
         #endregion
