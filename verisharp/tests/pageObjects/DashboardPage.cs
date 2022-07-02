@@ -24,6 +24,8 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
+using log4net;
+using System.Reflection;
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
@@ -91,6 +93,14 @@ namespace Verisoft.Pages
             return await base.IsOnPage(m_page, "//*[@data-testid='menuListDropDownSelector']");
         }
 
+        #endregion
+
+
+        #region [ Static ]
+        
+        // Static Fields
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
         #endregion
     }
 }

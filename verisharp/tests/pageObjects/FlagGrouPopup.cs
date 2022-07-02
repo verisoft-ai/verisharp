@@ -25,6 +25,8 @@
 //
 //*****************************************************************************
 using Microsoft.Playwright;
+using log4net;
+using System.Reflection;
 
 namespace Verisoft.Pages
 {
@@ -114,6 +116,14 @@ namespace Verisoft.Pages
             return;
         }
 
+        #endregion
+
+
+        #region [ Static ]
+        
+        // Static Fields
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
         #endregion
     }
 }

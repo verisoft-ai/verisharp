@@ -26,6 +26,8 @@
 //*****************************************************************************
 using System.Collections.ObjectModel;
 using System.Runtime.InteropServices;
+using log4net;
+using System.Reflection;
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
@@ -135,6 +137,14 @@ namespace Verisoft.Pages
             return (toolTipGroup == group) && (toolTipUser.Substring(6).Trim() == user) && (toolTipDate.Substring(6).Trim() == date);
         }
 
+        #endregion
+
+
+        #region [ Static ]
+        
+        // Static Fields
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
         #endregion
     }
 }

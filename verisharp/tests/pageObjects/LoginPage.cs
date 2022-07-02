@@ -24,6 +24,9 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
+using log4net;
+using System.Reflection;
+
 using Microsoft.Playwright;
 
 namespace Verisoft.Pages
@@ -69,6 +72,7 @@ namespace Verisoft.Pages
         public async Task<DashboardPage> clickLogin()
         {
             await m_btnLogin.ClickAsync();
+            log.Debug("Clicked on Login button");
             return new DashboardPage(m_page);
         }
 
@@ -84,6 +88,7 @@ namespace Verisoft.Pages
             await m_txtUserName.FillAsync(userName);
             await m_txtPassword.FillAsync(password);
             await m_btnLogin.ClickAsync();
+            log.Debug("Clicked on Login button");
 
             return new DashboardPage(m_page);
         }
@@ -93,6 +98,14 @@ namespace Verisoft.Pages
             return await base.IsOnPage(m_page, "[data-testid ='logInButton']");
         }
 
+        #endregion
+
+
+        #region [ Static ]
+        
+        // Static Fields
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        
         #endregion
     }
 }

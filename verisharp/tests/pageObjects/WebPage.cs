@@ -24,6 +24,8 @@
 // Original version of source code generated.
 //
 //*****************************************************************************
+using log4net;
+using System.Reflection;
 
 namespace Verisoft.Pages
 {

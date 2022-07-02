@@ -66,7 +66,7 @@ namespace Verisoft.Pages
         /// <returns>true - on page, false - not on page</returns>
         public async Task<bool> IsOnPage(IPage page, string locator)
         {
-            var element = page.Locator(locator);
+            ILocator element = page.Locator(locator);
             await element.WaitForAsync();
             return await element.IsVisibleAsync();
         }
