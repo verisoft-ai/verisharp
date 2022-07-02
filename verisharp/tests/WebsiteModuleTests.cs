@@ -48,7 +48,7 @@ namespace Verisoft.Tests
     [AllureSeverity(Allure.Commons.SeverityLevel.critical)]
     public class WebsiteModuleTests : PageTest
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
 
 
         [OneTimeSetUp]

@@ -146,7 +146,7 @@ namespace Verisoft.Pages
         #region [ Static ]
         
         // Static Fields
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod()?.DeclaringType);
         
         #endregion
     }
